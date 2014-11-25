@@ -3,9 +3,16 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
+    <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    Open Console
+    <div style="width: 100%">
+        <button id="help" style="display: none">HELP</button>
+        <div id="out"></div>
+
+
+        <canvas id='example'>Обновите браузер</canvas>
+    </div>
     <script src="robohub/kernel.js"></script>
     <script src="robohub/config.js"></script>
     <script src="robohub/app.js"></script>
@@ -14,5 +21,47 @@
     <script src="robohub/levels.js"></script>
     <script src="main.js"></script>
     <script src="robohub.js"></script>
+    <script>
+        var example = document.getElementById("example"),
+            ctx     = example.getContext('2d'),
+            robik;
+
+        document.addEventListener("DOMContentLoaded", function(event) {
+            robik = new Robohub();
+
+            document.getElementById("help").addEventListener('click', function(e) {
+                var size = 20;
+
+                function setPoint(x, y, val) {
+                    if (val) {
+                        x += size / 2;
+                        y += size / 2;
+                        ctx.font = "bold 20px sans-serif";
+                        ctx.textBaseline = "middle";
+                        ctx.textAlign = "center";
+                        ctx.fillText(val, x, y);
+                    } else {
+                        ctx.fillRect(x, y, size, size);
+                    }
+                }
+
+                example.height = robik.currentMap.length * size;
+                example.width = robik.currentMap[0].length * size;
+                example.style.display = "";
+
+                robik.currentMap.forEach(function (valY, y) {
+                    valY.forEach(function (valX, x) {
+                        if (valX == "#") {
+                            setPoint(x * size, y * size);
+                        } else if (valX == "@" || valX == "*") {
+                            setPoint(x * size , y * size, valX);
+                        }
+                    });
+                });
+
+            });
+
+        });
+    </script>
 </body>
 </html>
